@@ -1,4 +1,5 @@
-export const SCALE = 0.8;
+export const SCALE_MIN = 0.6;
+export const SCALE_MAX = 0.8;
 export const GRID_SIZE = 15;
 export const DROPPER_SIZE = 160;
 export const DEFAULT_COLOR = '#ffffff';

@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 
+import { useSize } from '../../hooks/useSize';
+
 import Tools from '../Tools';
 import DropperCursor from '../DropperCursor';
 import ImageUrl from '../../assets/image.jpg';
 import { rgbToHex } from '../../utils/rgbToHex';
 import {
-    SCALE,
+    SCALE_MAX,
+    SCALE_MIN,
     DROPPER_SIZE,
     DEFAULT_COLOR,
     CENTER_POSITION,
@@ -30,6 +33,13 @@ const Root: React.FC = () => {
     const [cursorPosition, setCursorPosition] =
         useState<Position>(DEFAULT_POSITION);
 
+    const { width } = useSize();
+
+    const scale = useMemo<number>(
+        () => (width > 1440 ? SCALE_MAX : SCALE_MIN),
+        [width],
+    );
+
     const showDropper = useMemo<boolean>(
         () => isActive && isInsideCanvas,
         [isActive, isInsideCanvas],
@@ -47,9 +57,11 @@ const Root: React.FC = () => {
         setIsActive(!isActive);
     };
 
+    // Returns the color data of a single pixel from the canvas context at (x, y) position
     const getImageData = (x: number, y: number): Uint8ClampedArray =>
         ctx.current!.getImageData(x, y, 1, 1).data;
 
+    // Returns color at (x, y) position
     const getColor = (x: number, y: number): string => {
         const data = getImageData(x, y);
         if (!data) {
@@ -59,6 +71,7 @@ const Root: React.FC = () => {
         return rgbToHex(r, g, b);
     };
 
+    // Gets and sets the current position's color hex value and cursor coordinates
     const getColorAndCursor = (
         event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
     ) => {
@@ -87,6 +100,7 @@ const Root: React.FC = () => {
         }
     };
 
+    // On canvas click sets color and deactivates the dropper mode
     const handleClick = (
         e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
     ) => {
@@ -102,6 +116,7 @@ const Root: React.FC = () => {
         setIsInsideCanvas(false);
     };
 
+    // Drawing image on canvas
     const drawImage = () => {
         const image = new Image();
         image.src = ImageUrl;
@@ -110,22 +125,23 @@ const Root: React.FC = () => {
             ctx.current = canvas?.getContext('2d', {
                 willReadFrequently: true,
             })!;
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
 
-            const width = image.width * SCALE;
-            const height = image.height * SCALE;
+            const width = image.width * scale;
+            const height = image.height * scale;
+
+            canvas.width = window.innerWidth;
+            canvas.height = height;
 
             const x = (canvas.width - width) / 2;
-            const y = (canvas.height - height) / 2;
 
-            ctx.current.drawImage(image, x, y, width, height);
+            ctx.current.drawImage(image, x, 0, width, height);
         };
     };
 
     useEffect(() => {
         drawImage();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [scale]);
 
     return (
         <div className={`${styles.wrapper} ${showDropper && styles.cursor}`}>
