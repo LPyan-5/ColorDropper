@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 import Tools from '../Tools';
+import DropperCursor from '../DropperCursor';
 import ImageUrl from '../../assets/image.jpg';
 import { rgbToHex } from '../../utils/rgbToHex';
 import {
     SCALE,
+    DROPPER_SIZE,
     DEFAULT_COLOR,
     CENTER_POSITION,
     DEFAULT_POSITION,
@@ -28,19 +30,18 @@ const Root: React.FC = () => {
     const [cursorPosition, setCursorPosition] =
         useState<Position>(DEFAULT_POSITION);
 
-    console.log(cursorPosition);
     const showDropper = useMemo<boolean>(
         () => isActive && isInsideCanvas,
         [isActive, isInsideCanvas],
     );
 
-    // const dropperPosition = useMemo(
-    //     () => ({
-    //         x: cursorPosition.x - DROPPER_SIZE / 2,
-    //         y: cursorPosition.y,
-    //     }),
-    //     [cursorPosition],
-    // );
+    const dropperPosition = useMemo(
+        () => ({
+            x: cursorPosition.x - DROPPER_SIZE / 2,
+            y: cursorPosition.y,
+        }),
+        [cursorPosition],
+    );
 
     const handleDropperClick = () => {
         setIsActive(!isActive);
@@ -49,14 +50,14 @@ const Root: React.FC = () => {
     const getImageData = (x: number, y: number): Uint8ClampedArray =>
         ctx.current!.getImageData(x, y, 1, 1).data;
 
-    // const getColor = (x: number, y: number): string => {
-    //     const data = getImageData(x, y);
-    //     if (!data) {
-    //         return DEFAULT_COLOR;
-    //     }
-    //     const [r, g, b] = data.slice(0, 3);
-    //     return rgbToHex(r, g, b);
-    // };
+    const getColor = (x: number, y: number): string => {
+        const data = getImageData(x, y);
+        if (!data) {
+            return DEFAULT_COLOR;
+        }
+        const [r, g, b] = data.slice(0, 3);
+        return rgbToHex(r, g, b);
+    };
 
     const getColorAndCursor = (
         event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -140,6 +141,14 @@ const Root: React.FC = () => {
                     className={styles.canvas}
                     onMouseOut={handleMouseOut}
                 />
+                {showDropper && (
+                    <DropperCursor
+                        color={color}
+                        getColor={getColor}
+                        cursorPosition={cursorPosition}
+                        dropperPosition={dropperPosition}
+                    />
+                )}
             </div>
         </div>
     );
