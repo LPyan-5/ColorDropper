@@ -24,8 +24,8 @@ const Trellis: React.FC<Props> = ({ getColor, cursorPosition }) => {
 
     return (
         <div className={styles.gridContainer}>
-            {gridData.map((row, x) =>
-                row.map((cell, y) => (
+            {gridData[0].map((_, y) =>
+                gridData.map((_, x) => (
                     <div
                         key={`${y}_${x}`}
                         className={styles.gridItem}
