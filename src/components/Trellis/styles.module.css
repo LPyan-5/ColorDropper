@@ -1,0 +1,21 @@
+.gridContainer {
+    top: 0;
+    left: 0;
+    gap: 1px;
+    display: grid;
+    overflow: hidden;
+    border-radius: 50%;
+    position: absolute;
+    background: #fdfaf1;
+    border: 1px solid #fff;
+    grid-template-rows: repeat(15, 1fr);
+    grid-template-columns: repeat(15, 1fr);
+}
+
+.gridItem {
+    margin: 0;
+    padding: 0;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+}

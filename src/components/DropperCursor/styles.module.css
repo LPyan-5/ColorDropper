@@ -1,0 +1,26 @@
+.dropperCircle {
+    top: 0;
+    left: 0;
+    z-index: 1;
+    position: absolute;
+}
+
+.circleHex {
+    left: 48px;
+    top: 110px;
+    z-index: 1;
+    color: black;
+    font-size: 15px;
+    padding: 2px 5px;
+    position: absolute;
+    border-radius: 10px;
+}
+
+.dropperTrellis {
+    position: relative;
+}
+
+.dropperCursor {
+    position: absolute;
+    pointer-events: none;
+}
