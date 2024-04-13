@@ -110,13 +110,16 @@ const Root: React.FC = () => {
             ctx.current = canvas?.getContext('2d', {
                 willReadFrequently: true,
             })!;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
             const width = image.width * SCALE;
             const height = image.height * SCALE;
-            canvas.width = width;
-            canvas.height = height;
 
-            ctx.current.drawImage(image, 0, 0, width, height);
+            const x = (canvas.width - width) / 2;
+            const y = (canvas.height - height) / 2;
+
+            ctx.current.drawImage(image, x, y, width, height);
         };
     };
 
