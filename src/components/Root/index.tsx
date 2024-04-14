@@ -33,7 +33,7 @@ const Root: React.FC = () => {
     const [cursorPosition, setCursorPosition] =
         useState<Position>(DEFAULT_POSITION);
 
-    const { width } = useSize();
+    const { width }: { width: number } = useSize();
 
     const scale = useMemo<number>(
         () => (width > 1440 ? SCALE_MAX : SCALE_MIN),
@@ -72,9 +72,7 @@ const Root: React.FC = () => {
     };
 
     // Gets and sets the current position's color hex value and cursor coordinates
-    const getColorAndCursor = (
-        event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
-    ) => {
+    const getColorAndCursor = (event: React.MouseEvent<HTMLCanvasElement>) => {
         const x = event.nativeEvent.offsetX;
         const y = event.nativeEvent.offsetY;
         if (!x || !y) return;
@@ -94,25 +92,21 @@ const Root: React.FC = () => {
         setColor(hex);
     };
 
-    const handleMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const handleMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (isActive) {
             getColorAndCursor(e);
         }
     };
 
     // On canvas click sets color and deactivates the dropper mode
-    const handleClick = (
-        e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
-    ) => {
+    const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (isActive) {
             getColorAndCursor(e);
             handleDropperClick();
         }
     };
 
-    const handleMouseOut = (
-        e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
-    ) => {
+    const handleMouseOut = (e: React.MouseEvent<HTMLCanvasElement>) => {
         setIsInsideCanvas(false);
     };
 
